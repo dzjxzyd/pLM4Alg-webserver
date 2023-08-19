@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+      <head>
+        <meta charset="utf-8">
+        <title>pLM4Alg</title>
+        <link href='https://fonts.googleapis.com/css?family=Tangerine' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family==Rancho&effect=shadow-multiple' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Tangerine' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Tangerine' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+		<style>
+			.content {
+			  max-width: 1000px;
+			  margin: auto;
+			}
+            input[type=checkbox]{
+                width: 20px;
+            }
+        </style>
+    </head>
+
+<body>
+    <div class="content">
+        <h1>pLM4Alg: Protein language model-based classifiers further the pLM4Algic proteins/peptides prediction </h1>
+        <p style="font-size:70%">The webserver is the implementation of the paper "Du, Z. & Li, Y. (2023). pLM4Alg: Protein language model-based classifiers further the pLM4Algic proteins/peptides prediction"</p>
+        <p style="font-size:70%">Spcial needs: very large dataset processing or pLM4Alg-2560 model usage: please download our model locally for running <a href ="https://drive.google.com/drive/folders/1veD40uj8R7gpIo8y1niXtoKij_vZ3eiD?usp=sharing">Model files for server.</a> or contact us at zhenjiao@ksu.edu or yonghui@ksu.edu for more assistant.  </p>
+	<fieldset>
+        <p style="font-size:80%">Quick output version: 1. Choose a model  → 2. Input a protein/peptide sequence</p>
+        <form action="{{url_for('predict')}}" method="post">
+            <label for="Model selection">Choose a model:</label>
+            <select name="Model_selection" id="model2" required="required">
+                <option value="1">pLM4Alg-320</option>
+                <option value="2">pLM4Alg-480</option>
+                <option value="3">pLM4Alg-640</option>
+                <option value="4">pLM4Alg-1280</option>
+                <!-- <option value="5">pLM4Alg-2560</option> -->
+
+            </select>
+{#            <input type="text" name="Model selection" placeholder="input model index, example:1" required="required">#}
+            <input type="text" name="Peptide_sequences" placeholder="peptide sequence input, example: ASD,QWE,APE" required="required" />
+            <button type="submit" class="btn btn-primary btn-block btn-large">Run</button>
+        </form>
+        <p style="color:cyan"> {{ prediction_text }} </p>
+        </fieldset>
+        <br/>
+        <br/>
+        <fieldset>
+        <p style="font-size:80%">Large-scale output version: 1. Prepare your files (xls, xlsx, fasta, or txt) and click “Choose File” for uploading → 2. Choose one or multiple models  → 3. Download the results.</p>
+        <form action="{{url_for('pred_with_file')}}" method="post" enctype = "multipart/form-data">
+          <select name="Model_selection" id="model2" required="required">
+              <option value="1">pLM4Alg-320</option>
+              <option value="2">pLM4Alg-480</option>
+              <option value="3">pLM4Alg-640</option>
+              <option value="4">pLM4Alg-1280</option>
+              <!-- <option value="5">pLM4Alg-2560</option> -->
+          </select>
+          <br/>
+            <label for="Peptide_sequences">Choose a file to upload</label>
+            <input type="file" name="Peptide_sequences" id="Peptide_sequences" accept=".xls,.xlsx,.txt,.fasta"/>
+            <button type="submit" class="btn btn-primary btn-block btn-large">Run</button>
+          </form>
+          <h4>Usage of the webserver:</h4>
+          <p style="font-size:80%"> Example for “Quick output version” : </p>
+          <p style="font-size:70%">1. Select “pLM4Alg-320” model for pLM4Algicity prediction.   →   →  →  2. Insert a peptide or protein sequence, “pLM4AlgS” →   →  →  3. Click “Run”→   →  → 4. The result will be returned in seconds below the “Run” button</p>
+          <p style="font-size:70%">Notice: it also support multiple sequence at the same time. Just input as "ALL,pLM4AlgS,PREDICT" (sequences are separated by comma, no space)</p>
+          <p style="font-size:80%"> Example for “Large-scale output version:” : </p>
+          <p style="font-size:70%">1. Prepare your xls, xlsx, txt or fasta files  →  →  → 2. Upload the file through “Choose File” botton  →   →  → 3. Select a model models →   →  → 4. Click “Run” →   →  → 5. It will automatically download your results. </p>
+          <p style="font-size:70%">Notice: File preparation should follow the examples under <a href ="https://github.com/dzjxzyd/pLM4Alg/tree/main/web%20server%20input%20example">this repository.</a> </p>
+          <h4>Explaination of the model names</h4>
+	  <p style="font-size:70%">pLM4Alg-320 represent the model based on the pretrained language model with 320 output dimension  </h4>
+          <img src="static/css/Whole architecture.png" alt="Whole architecture" width="950" height="530" style="float:left">
+          <h4>The performance of the deployed models</h4>
+          <p style="font-size:80%"> The orginal code for the four model generaton is available at <a href="https://github.com/dzjxzyd/pLM4Alg/blob/main/pLM4pLM4Algs_web_server_model_generation.ipynb">here</a> </p>
+          <table>
+            <tr>
+              <th>Project name</th>
+              <th>Accuracy</th>
+              <th>Sensitivity</th>
+              <th>Specificity</th>
+              <th>MCC</th>
+              <th>AUC</th>
+            </tr>
+            <tr>
+              <td>pLM4Alg-320</td>
+              <td>94.4%</td>
+              <td>94.2%</td>
+              <td>94.6%</td>
+              <td>0.89</td>
+              <td>98.3%</td>
+            </tr>
+            <tr>
+              <td>pLM4Alg-480</td>
+              <td>94.5%</td>
+              <td>94.0%</td>
+              <td>95.0%</td>
+              <td>0.89</td>
+              <td>98.5%</td>
+            </tr>
+            <tr>
+              <td>pLM4Alg-640</td>
+              <td>95.1%</td>
+              <td>96.1%</td>
+              <td>94.2%</td>
+              <td>0.90</td>
+              <td>98.7%</td>
+            </tr>
+            <tr>
+              <td>pLM4Alg-1280</td>
+              <td>95.4%</td>
+              <td>94.7%</td>
+              <td>96.1%</td>
+              <td>0.91</td>
+              <td>98.8%</td>
+            </tr>
+            <tr>
+              <td>pLM4Alg-2560</td>
+              <td>95.8%</td>
+              <td>95.9%</td>
+              <td>95.6%</td>
+              <td>0.92</td>
+              <td>99.1%</td>
+            </tr>
+          </table>
+
+
+      </div>
+  </body>
+  </html>
